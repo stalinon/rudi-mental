@@ -32,7 +32,7 @@ function App() {
   const [exerciseModalOpen, setExerciseModalOpen] = useState(false);
 
   const loadExercise = (fileName) => {
-    fetch(`/exercises/${fileName}`)
+    fetch(`${process.env.PUBLIC_URL}/exercises/${fileName}`)
       .then(res => res.json())
       .then(data => {
         setExercise(data);

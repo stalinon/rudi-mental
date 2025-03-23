@@ -9,7 +9,7 @@ const ExerciseSelectorModal = ({ open, onClose, onSelect, onClearExercise, showB
 
   useEffect(() => {
     if (open) {
-      fetch('/exercises/index.json')
+      fetch(`${process.env.PUBLIC_URL}/exercises/index.json`)
         .then(res => res.json())
         .then(setFiles)
         .catch(console.error);
