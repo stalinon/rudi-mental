@@ -5,6 +5,7 @@ import {
   Slider,
   Typography,
   useTheme,
+  useMediaQuery
 } from '@mui/material';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -15,6 +16,10 @@ const MAX_BPM = 240;
 const TempoSlider = ({ bpm, setBpm }) => {
   const theme = useTheme();
   const sliderRef = useRef(null);
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const marksCount = isMobile ? 2 : isTablet ? 5 : 12;
 
   // Обработка колеса мыши
   const handleWheel = useCallback((e) => {
@@ -51,6 +56,8 @@ const TempoSlider = ({ bpm, setBpm }) => {
     });
   };
 
+  const stepSize = Math.floor((MAX_BPM - MIN_BPM) / (marksCount - 1));
+  const marks = Array.from({ length: marksCount }, (_, i) => MIN_BPM + i * stepSize);
   return (
     <Box
       sx={{
@@ -110,8 +117,7 @@ const TempoSlider = ({ bpm, setBpm }) => {
             px: 1,
           }}
         >
-          {[...Array(12)].map((_, i) => {
-            const value = MIN_BPM + i * 20;
+          {marks.map((value) => {
             return (
               <Typography
                 key={value}

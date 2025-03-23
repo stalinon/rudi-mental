@@ -44,8 +44,8 @@ const MetronomeButton = ({ bpm, isActive, onToggle }) => {
         cursor: 'pointer',
         transition: 'all 0.3s ease-in-out',
         boxShadow: isActive
-          ? `0 0 20px 5px ${activeStart}80`
-          : `0 0 10px ${theme.palette.grey[900]}30`,
+          ? `0 0 20px 5px ${theme.palette.primary.main}80`
+          : `0 0 10px ${theme.palette.mode === 'light' ? theme.palette.grey[900] : theme.palette.primary.light}30`,
         userSelect: 'none',
       }}
     >

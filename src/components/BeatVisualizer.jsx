@@ -7,6 +7,8 @@ const BeatVisualizer = ({
   beatsPerBar = 4,
   isActive = false,
   metronomeSettings = { playBars: 0, muteBars: 0 },
+  onBarChange = () => {},
+  onBeatChange = () => {},
 }) => {
   const theme = useTheme();
   const [currentBeat, setCurrentBeat] = useState(-1);
@@ -72,7 +74,10 @@ const BeatVisualizer = ({
           }
           
           barCounter++;
+          onBarChange(barCounter - 1);
         }
+
+        onBeatChange(beat);
 
       if (!isMuted) {
         playClick(beat);
@@ -81,7 +86,7 @@ const BeatVisualizer = ({
     }, intervalMs);
 
     return () => clearInterval(intervalRef.current);
-  }, [isActive, bpm, beatsPerBar, isCyclic, metronomeSettings]);
+  }, [isActive, bpm, beatsPerBar, isCyclic, metronomeSettings, onBarChange, onBeatChange]);
 
   const getDotStyle = (i) => {
     const isCurrent = i === currentBeat;
