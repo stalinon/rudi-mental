@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 
-const TimeSignatureButton = ({ top, bottom, onClick }) => {
-  const theme = useTheme();
+const MetronomeSettingsButton = ({ onClick }) => {
+  const theme = useTheme();  
 
   return (
     <Box sx={{ textAlign: 'center', cursor: 'pointer' }} onClick={onClick}>
@@ -13,7 +14,6 @@ const TimeSignatureButton = ({ top, bottom, onClick }) => {
           borderRadius: '50%',
           border: `2px solid ${theme.palette.grey[600]}`,
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: theme.palette.background.paper,
@@ -24,15 +24,10 @@ const TimeSignatureButton = ({ top, bottom, onClick }) => {
           },
         }}
       >
-        <Typography variant="subtitle2" fontWeight={500}>
-          {top}
-        </Typography>
-        <Typography variant="subtitle2" fontWeight={500}>
-          {bottom}
-        </Typography>
+        <SettingsIcon sx={{ fontSize: 28, color: theme.palette.text.primary }} />
       </Box>
     </Box>
   );
 };
 
-export default TimeSignatureButton;
+export default MetronomeSettingsButton;

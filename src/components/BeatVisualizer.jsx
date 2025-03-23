@@ -6,6 +6,7 @@ const BeatVisualizer = ({
   bpm = 80,
   beatsPerBar = 4,
   isActive = false,
+  metronomeSettings = { playBars: 0, muteBars: 0 },
 }) => {
   const theme = useTheme();
   const [currentBeat, setCurrentBeat] = useState(-1);
@@ -14,6 +15,8 @@ const BeatVisualizer = ({
 
   const synth = useRef(null);
   const accent = useRef(null);
+
+  const isCyclic = metronomeSettings.playBars > 0 && metronomeSettings.muteBars > 0;
 
   useEffect(() => {
     synth.current = new Tone.Synth({
@@ -33,7 +36,6 @@ const BeatVisualizer = ({
     const now = Tone.now();
     if (now <= lastTriggerTime.current) return;
     lastTriggerTime.current = now;
-
     if (index === 0) {
       accent.current.triggerAttackRelease('C2', '8n', now);
     } else {
@@ -51,17 +53,35 @@ const BeatVisualizer = ({
     Tone.start();
 
     let beat = -1;
+    let barCounter = 0;
+    let isMuted = false;
 
     const intervalMs = (60_000 / bpm);
 
     intervalRef.current = setInterval(() => {
       beat = (beat + 1) % beatsPerBar;
-      playClick(beat);
+
+       // Каждый раз, когда начинается новый такт
+       if (beat === 0) {
+          if (isCyclic) {
+            const total = isMuted ? metronomeSettings.muteBars : metronomeSettings.playBars;
+            if (barCounter >= total) {
+              isMuted = !isMuted;
+              barCounter = 0;
+            }
+          }
+          
+          barCounter++;
+        }
+
+      if (!isMuted) {
+        playClick(beat);
+      }
       setCurrentBeat(beat);
     }, intervalMs);
 
     return () => clearInterval(intervalRef.current);
-  }, [isActive, bpm, beatsPerBar]);
+  }, [isActive, bpm, beatsPerBar, isCyclic, metronomeSettings]);
 
   const getDotStyle = (i) => {
     const isCurrent = i === currentBeat;

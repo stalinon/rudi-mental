@@ -3,13 +3,19 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  margin: 0;
+  margin: 0 50px;
   overflow: hidden;
   height: 100vh;
 }
 
-.App_header {
+.App__header {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.App__header__settings {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }
