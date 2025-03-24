@@ -21,27 +21,24 @@ const BeatVisualizer = ({
   const isCyclic = metronomeSettings.playBars > 0 && metronomeSettings.muteBars > 0;
 
   useEffect(() => {
-    synth.current = new Tone.Synth({
-      oscillator: { type: 'square' },
-      envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.01 },
-    }).toDestination();
-
-    accent.current = new Tone.MembraneSynth().toDestination();
-
+    synth.current = new Tone.Player(`${process.env.PUBLIC_URL}/sounds/click.mp3`).toDestination();
+    accent.current = new Tone.Player(`${process.env.PUBLIC_URL}/sounds/accent.mp3`).toDestination();
+  
     return () => {
       synth.current.dispose();
       accent.current.dispose();
     };
   }, []);
+  
 
   const playClick = (index) => {
     const now = Tone.now();
     if (now <= lastTriggerTime.current) return;
     lastTriggerTime.current = now;
     if (index === 0) {
-      accent.current.triggerAttackRelease('C2', '8n', now);
+      accent.current.start(now);
     } else {
-      synth.current.triggerAttackRelease('C6', '16n', now);
+      synth.current.start(now);
     }
   };
 

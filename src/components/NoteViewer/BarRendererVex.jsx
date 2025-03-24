@@ -16,6 +16,8 @@ const BarRendererVex = ({ barNotes, isCurrent, currentBeat }) => {
   const containerRef = useRef(null);
 
   const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+  const DEFAULT_COLOR = isDark ? theme.palette.primary.light : null;
 
   useEffect(() => {
     if (!barNotes || barNotes.length === 0) return;
@@ -23,11 +25,14 @@ const BarRendererVex = ({ barNotes, isCurrent, currentBeat }) => {
     containerRef.current.innerHTML = '';
   
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
-    renderer.resize(200, 150);
+    renderer.resize(250, 150);
     const context = renderer.getContext();
     context.setFont('Arial', 10);
+    context.setFillStyle(DEFAULT_COLOR);
+    context.setStrokeStyle(DEFAULT_COLOR);
   
-    const stave = new Stave(10, 10, 180);
+    const stave = new Stave(10, 10, 220, { fillStyle: DEFAULT_COLOR });
+
     stave.setContext(context).draw();
   
     const notes = barNotes.map((note, i) => {
@@ -40,7 +45,6 @@ const BarRendererVex = ({ barNotes, isCurrent, currentBeat }) => {
         stem_direction: Stem.UP,
       });
   
-      // 👻 Ghost-ноты скобками
       if (note.accent === 'ghost') {
         const ghostLeft = new Annotation(' )')
           .setVerticalJustification(Annotation.VerticalJustify.CENTER)
@@ -54,40 +58,48 @@ const BarRendererVex = ({ barNotes, isCurrent, currentBeat }) => {
         vfNote.addModifier(ghostRight, 0);
       }
   
-      // 🔊 Акцент сверху
       if (note.accent === 'accent') {
         vfNote.addModifier(
-          new Articulation('a>').setPosition(Articulation.Position.ABOVE), // ABOVE
+          new Articulation('a>').setPosition(Articulation.Position.ABOVE),
           0
         );
       }
-  
-      // 🖐 R / L
+
       if (note.hand) {
         vfNote.addModifier(
           new Annotation(note.hand).setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
           0
         );
       }
+
+      vfNote.setStyle({fillStyle: DEFAULT_COLOR, strokeStyle: DEFAULT_COLOR});
       return vfNote;
-    });
-  
+    });  
   
     const voice = new Voice({ num_beats: 4, beat_value: 4 });
     voice.setStrict(false);
     voice.addTickables(notes);
   
     new Formatter().joinVoices([voice]).format([voice], 160);
-    const beams = Beam.generateBeams(notes, {stemDirection: Stem.UP});
+    const beams = Beam.generateBeams(notes, 
+      {
+        stemDirection: Stem.UP,
+        beam_rests: true,
+        show_stemlets: true,
+        beam_middle_only: true
+      });
     voice.draw(context, stave);
-    beams.forEach((beam) => beam.setContext(context).draw());
-  }, [barNotes, isCurrent, currentBeat, theme]);
+    beams.forEach((beam) => {
+      beam.setStyle({fillStyle: DEFAULT_COLOR, strokeStyle: DEFAULT_COLOR});
+      return beam.setContext(context).draw();
+    });
+  }, [barNotes, isCurrent, currentBeat, theme, DEFAULT_COLOR]);
 
   return (
     <Box
       ref={containerRef}
       sx={{
-        width: 200,
+        width: 250,
         height: 150,
         border: isCurrent ? '2px solid ' + theme.palette.primary.light : '1px dashed ' + theme.palette.primary.dark,
         borderRadius: 2,

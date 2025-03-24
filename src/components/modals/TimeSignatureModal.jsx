@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Modal,
@@ -20,14 +20,21 @@ const TimeSignatureModal = ({ open, onClose, onSelect, initialTop = 4, initialBo
   const [top, setTop] = useState(initialTop);
   const [bottom, setBottom] = useState(initialBottom);
 
+  useEffect(() => {
+    if (open) {
+      setTop(initialTop);
+      setBottom(initialBottom);
+    }
+  }, [open, initialTop, initialBottom]);
+
   const applyPreset = ([presetTop, presetBottom]) => {
     setTop(presetTop);
     setBottom(presetBottom);
-    handleConfirm();
+    handleConfirm(presetTop, presetBottom);
   };
 
-  const handleConfirm = () => {
-    onSelect({ top, bottom });
+  const handleConfirm = (t = top, b = bottom) => {
+    onSelect({ top: t, bottom: b });
     onClose();
   };
 

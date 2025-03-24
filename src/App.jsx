@@ -19,7 +19,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
   const theme = createTheme({
     palette: {
@@ -65,12 +65,13 @@ function App() {
     <div className="App">
         <div className='App__header'>
           <div className='App__header__settings'>
-            <CircleIconButton caption="Размер" onClick={() => setOpen(true)} labelTop={signature.top} labelBottom={signature.bottom} />
+            <CircleIconButton key={`${signature.top}/${signature.bottom}`} caption="Размер" onClick={() => setOpen(true)} labelTop={signature.top} labelBottom={signature.bottom} />
             <CircleIconButton caption="Настройки" onClick={() => setSettingsOpen(true)} icon={<SettingsIcon />} />
             <CircleIconButton caption="Упражнения" onClick={() => setExerciseModalOpen(true)} icon={<AccessibleForwardIcon />} />
-            <CircleIconButton  caption={darkMode ? 'Темная' : 'Православная'} icon={darkMode ? <DarkModeIcon /> : <LightModeIcon />} onClick={() => setDarkMode(prev => !prev)}/>
+            <CircleIconButton caption={darkMode ? 'Темная' : 'Православная'} icon={darkMode ? <DarkModeIcon /> : <LightModeIcon />} onClick={() => setDarkMode(prev => !prev)}/>
           </div>
             <BeatVisualizer
+              key={`${signature.top}/${signature.bottom}`}
               bpm={bpm}
               beatsPerBar={signature.top}
               isActive={isActive}
