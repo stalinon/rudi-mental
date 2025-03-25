@@ -29,19 +29,7 @@ function App() {
 
   const [exercise, setExercise] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [exerciseModalOpen, setExerciseModalOpen] = useState(false);
-
-  const loadExercise = (fileName) => {
-    fetch(`${process.env.PUBLIC_URL}/exercises/${fileName}`)
-      .then(res => res.json())
-      .then(data => {
-        setExercise(data);
-        setVisible(true);
-        setIsActive(false);
-        setCurrentBar(0);
-        setCurrentBeat(0);
-      });
-  };  
+  const [exerciseModalOpen, setExerciseModalOpen] = useState(false); 
 
   const [bpm, setBpm] = useState(80);
   const [isActive, setIsActive] = useState(false);
@@ -57,6 +45,16 @@ function App() {
     muteBars: 0,
   });
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const loadExercise = (fileName, timeSignature) => {
+    setExercise(fileName);
+    setSignature(timeSignature);
+
+    setVisible(true);
+    setIsActive(false);
+    setCurrentBar(0);
+    setCurrentBeat(0);
+  }; 
 
   const toggleMetronome = () => setIsActive((prev) => !prev);
   return (
@@ -94,7 +92,11 @@ function App() {
       <TimeSignatureModal
         open={open}
         onClose={() => setOpen(false)}
-        onSelect={setSignature}
+        onSelect={(signature) => {
+          if (!visible) {
+            setSignature(signature);
+          }
+        }}
         initialTop={signature.top}
         initialBottom={signature.bottom}
       />

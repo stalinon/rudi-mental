@@ -34,7 +34,7 @@ const ExerciseSelectorModal = ({ open, onClose, onSelect, onClearExercise, showB
             <ListItemButton
               key={file.file}
               onClick={() => {
-                onSelect(file.file);
+                onSelect(file.file, file.timeSignature);
                 onClose();
               }}
             >
