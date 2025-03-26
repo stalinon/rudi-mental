@@ -7,7 +7,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
 
 import MetronomeSettingsModal from './components/modals/MetronomeSettingsModal';
-import ExerciseSelectorModal from './components/modals/ExerciseSelectorModal';
+import ExerciseSelectorModal from './components/modals/ExerciseModal/ExerciseSelectorModal';
 import TimeSignatureModal from './components/modals/TimeSignatureModal';
 
 import MetronomeButton from './components/buttons/MetronomeButton';
