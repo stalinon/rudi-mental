@@ -18,6 +18,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 
+import Library from './components/modals/Library/Library';
+
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
@@ -46,6 +48,8 @@ function App() {
   });
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  const [openLibrary, setOpenLibrary] = useState(false);
+
   const loadExercise = (fileName, timeSignature) => {
     setExercise(fileName);
     setSignature(timeSignature);
@@ -61,31 +65,31 @@ function App() {
     <ThemeProvider theme={theme}>
     <CssBaseline />
     <div className="App">
-        <div className='App__header'>
-          <div className='App__header__settings'>
-            <CircleIconButton key={`${signature.top}/${signature.bottom}`} caption="Размер" onClick={() => setOpen(true)} labelTop={signature.top} labelBottom={signature.bottom} />
-            <CircleIconButton caption="Настройки" onClick={() => setSettingsOpen(true)} icon={<SettingsIcon />} />
-            <CircleIconButton caption="Упражнения" onClick={() => setExerciseModalOpen(true)} icon={<AccessibleForwardIcon />} />
-            <CircleIconButton caption={darkMode ? 'Темная' : 'Православная'} icon={darkMode ? <DarkModeIcon /> : <LightModeIcon />} onClick={() => setDarkMode(prev => !prev)}/>
-          </div>
-            <BeatVisualizer
-              key={`${signature.top}/${signature.bottom}`}
-              bpm={bpm}
-              beatsPerBar={signature.top}
-              isActive={isActive}
-              metronomeSettings={metronomeSettings}
-              onBarChange={setCurrentBar}
-              onBeatChange={setCurrentBeat}
-            />
-          </div>
-        <MetronomeButton bpm={bpm} isActive={isActive} onToggle={toggleMetronome} />
-        <NoteViewer
-          exercise={exercise}
-          currentBar={currentBar}
-          currentBeat={currentBeat}
-          setIsActive={setIsActive}
-          visible={visible}
-        />
+      <div className='App__header'>
+        <div className='App__header__settings'>
+          <CircleIconButton key={`${signature.top}/${signature.bottom}`} caption="Размер" onClick={() => setOpen(true)} labelTop={signature.top} labelBottom={signature.bottom} />
+          <CircleIconButton caption="Настройки" onClick={() => setSettingsOpen(true)} icon={<SettingsIcon />} />
+          <CircleIconButton caption="Упражнения" onClick={() => setExerciseModalOpen(true)} icon={<AccessibleForwardIcon />} />
+          <CircleIconButton caption={darkMode ? 'Темная' : 'Православная'} icon={darkMode ? <DarkModeIcon /> : <LightModeIcon />} onClick={() => setDarkMode(prev => !prev)}/>
+        </div>
+          <BeatVisualizer
+            key={`${signature.top}/${signature.bottom}`}
+            bpm={bpm}
+            beatsPerBar={signature.top}
+            isActive={isActive}
+            metronomeSettings={metronomeSettings}
+            onBarChange={setCurrentBar}
+            onBeatChange={setCurrentBeat}
+          />
+      </div>
+      <MetronomeButton bpm={bpm} isActive={isActive} onToggle={toggleMetronome} />
+      <NoteViewer
+        exercise={exercise}
+        currentBar={currentBar}
+        currentBeat={currentBeat}
+        setIsActive={setIsActive}
+        visible={visible}
+      />
 
       <TempoSlider bpm={bpm} setBpm={setBpm} />
 
@@ -118,7 +122,11 @@ function App() {
           setVisible(false);
           setIsActive(false);
         }}
+        openLibrary={() => setOpenLibrary(true)}
+        isLibraryOpen={openLibrary}
       />
+
+      <Library open={openLibrary} handleClose={() => setOpenLibrary(false)} />
     </div>
     </ThemeProvider>
   );

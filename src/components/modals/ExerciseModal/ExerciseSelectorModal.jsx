@@ -1,28 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Box, Typography, Divider, useTheme } from '@mui/material';
 import AddExerciseModal from './AddExerciseModal';
-import ExerciseList from './ExerciseList';
 import UserExerciseList from './UserExerciseList';
 import ExerciseActions from './ExerciseActions';
 
 import { getUserExercises, saveUserExercise } from './exerciseStorage';
 
-const ExerciseSelectorModal = ({ open, onClose, onSelect, onClearExercise, showButton }) => {
+const ExerciseSelectorModal = ({ open, onClose, onSelect, onClearExercise, showButton, openLibrary, isLibraryOpen }) => {
   const theme = useTheme();
-  const [files, setFiles] = useState([]);
   const [userFiles, setUserFiles] = useState([]);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [removeIndexes, setRemoveIndexes] = useState({});
 
   useEffect(() => {
     if (open) {
-      fetch(`${process.env.PUBLIC_URL}/exercises/index.json`)
-        .then(res => res.json())
-        .then(setFiles)
-        .catch(console.error);
       setUserFiles(getUserExercises());
     }
-  }, [open]);
+  }, [open, isLibraryOpen]);
 
   const handleAddExercise = (exercise) => {
     saveUserExercise(exercise);
@@ -54,8 +48,6 @@ const ExerciseSelectorModal = ({ open, onClose, onSelect, onClearExercise, showB
         }}>
           <Typography variant="h6" gutterBottom>Выбор упражнения</Typography>
 
-          <ExerciseList files={files} onSelect={onSelect} onClose={onClose} />
-
           <UserExerciseList
             userFiles={userFiles}
             onSelect={onSelect}
@@ -71,6 +63,7 @@ const ExerciseSelectorModal = ({ open, onClose, onSelect, onClearExercise, showB
             onClearExercise={onClearExercise}
             onClose={onClose}
             onAdd={() => setAddModalOpen(true)}
+            openLibrary={openLibrary}
           />
         </Box>
       </Modal>

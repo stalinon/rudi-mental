@@ -5,12 +5,12 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 
 const UserExerciseList = ({ userFiles, onSelect, onClose, onRemove, removeIndexes }) => {
-  if (userFiles.length === 0) return null;
+  if (userFiles.length === 0)
+     return <Typography gutterBottom>Нет упражнений локально</Typography>;
 
   return (
     <>
       <Divider sx={{ my: 2 }} />
-      <Typography variant="subtitle2" gutterBottom>Мои упражнения</Typography>
       <List dense>
         {userFiles.map((file, index) => (
           <Collapse key={`user-${index}`} in={!removeIndexes[index]} timeout={300}>
@@ -24,11 +24,11 @@ const UserExerciseList = ({ userFiles, onSelect, onClose, onRemove, removeIndexe
             >
               <ListItemButton
                 onClick={() => {
-                  onSelect(file.file, file.timeSignature);
+                  onSelect(file.link, file.timeSignature);
                   onClose();
                 }}
               >
-                {file.name}
+                <Typography noWrap>{file.name}</Typography>
               </ListItemButton>
             </ListItem>
           </Collapse>
