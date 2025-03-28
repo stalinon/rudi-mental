@@ -16,7 +16,7 @@ const ExerciseSelectorModal = ({ open, onClose, onSelect, onClearExercise, showB
     if (open) {
       setUserFiles(getUserExercises());
     }
-  }, [open, isLibraryOpen]);
+  }, [open, isLibraryOpen, userFiles]);
 
   const handleAddExercise = (exercise) => {
     saveUserExercise(exercise);

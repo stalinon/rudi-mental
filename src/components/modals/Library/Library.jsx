@@ -1,83 +1,112 @@
 import React, { useEffect, useState } from 'react';
-import { nocodb } from '../../../api/nocodb';
-import { Modal, Stack, IconButton, useTheme } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import {
+  Modal, useTheme, Typography, Fade, Paper
+} from '@mui/material';
 
-import LibraryCard from './LibraryCard';
+import { listExercises } from '../../../api/nocodb';
+import LibraryList from './LibraryList';
+import LoadMoreButton from './LoadMoreButton';
 import NotePreview from './NotePreview';
-
 import { getUserExercises, saveUserExercise } from '../ExerciseModal/exerciseStorage';
 
-const Library = ({open, handleClose}) => {
+const LIMIT = 25;
+
+const Library = ({ open, handleClose }) => {
   const theme = useTheme();
 
   const [userExercises, setUserExercises] = useState([]);
   const [exercises, setExercises] = useState([]);
   const [preview, setPreview] = useState(false);
-  const [previewLink, setPreviewLink] = useState(null);
+  const [previewEx, setPreviewEx] = useState(null);
+  const [totalCards, setTotalCards] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
-    nocodb.dbViewRow.list(
-        "noco",
-        "pxs7yguqn4kdrh2",
-        "mlkdr9qliie4r01",
-        "vw1f4mrgudje32rn", 
-        {
-            "offset": 0,
-            "limit": 25,
-            "where": ""
-        }
-    ).then(function (data) {
-        setExercises(data.list.map(r => {
-            return {
-                name: r.Name,
-                description: r.Description,
-                link: r.GSLink,
-                timeSignature: { top: r.Top, bottom: r.Bottom }
-            }
-        }));
+    const fetchExercises = async (reset = false) => {
+      if (reset) setLoading(true);
+      const data = await listExercises(reset ? 0 : offset, LIMIT);
+      setTotalCards(data.total);
+      setExercises(prev => reset ? data.list : [...prev, ...data.list]);
+      setLoading(false);
+      setLoadingMore(false);
+    };
+
+    if (open) {
+      setOffset(0);
+      fetchExercises(true);
+      setUserExercises(getUserExercises());
+    }
+  }, [open, offset]);
+
+  const loadMore = () => {
+    const newOffset = offset + LIMIT;
+    setOffset(newOffset);
+    setLoadingMore(true);
+    listExercises(newOffset, LIMIT).then(data => {
+      setExercises(prev => [...prev, ...data.list]);
+      setLoadingMore(false);
     });
-  }, [open]);
+  };
 
-  useEffect(() => {
-    const stored = getUserExercises();
-    setUserExercises(stored);
-  }, [open]);  
+  const handleAdd = (exercise) => {
+    saveUserExercise({
+      name: exercise.name,
+      link: exercise.link,
+      timeSignature: exercise.timeSignature
+    }, false);
+    setUserExercises(getUserExercises());
+  };
+
+  const hasMore = exercises.length < totalCards;
 
   return (
-    <Modal open={open} sx={{backgroundColor: theme.palette.background.default}}>
-        <>
-            <IconButton
-                onClick={handleClose}
-                sx={{
-                    position: 'absolute',
-                    top: 8,
-                    right: 8,
-                    color: (theme) => theme.palette.grey[100],
-                    backgroundColor: (theme) => theme.palette.grey[500],
-                }}
-            >
-                <CloseIcon />
-            </IconButton>
-            <Stack margin={5} spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap sx={{ flexWrap: 'wrap' }}>
-                {exercises && exercises.map(
-                    (e, i) => <LibraryCard
-                        key={i}
-                        added={userExercises.some(u => u.link === e.link)}
-                        onModalOpen={(link) => {setPreviewLink(link); setPreview(true);}}
-                        handleAddExercise={() => {
-                            saveUserExercise({
-                            name: e.name,
-                            link: e.link,
-                            timeSignature: e.timeSignature
-                            });
-                            setUserExercises(getUserExercises()); // чтобы перерендерить
-                        }}
-                        name={e.name} description={e.description} link={e.link} timeSignature={e.timeSignature}
-                        />)}
-            </Stack>
-            <NotePreview open={preview} link={previewLink} onClose={() => setPreview(false)} />
-        </>
+    <Modal open={open} onClose={handleClose} closeAfterTransition>
+      <Fade in={open}>
+        <Paper
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '90%',
+            maxWidth: 1200,
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            padding: 3,
+            borderRadius: 3,
+            boxShadow: 24,
+            bgcolor: theme.palette.background.paper,
+          }}
+        >
+          <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+            Библиотека упражнений
+          </Typography>
+
+          <LibraryList
+            exercises={exercises}
+            userExercises={userExercises}
+            loading={loading}
+            onPreviewOpen={(e) => { setPreviewEx(e); setPreview(true); }}
+            onAdd={handleAdd}
+          />
+
+          <LoadMoreButton
+            hasMore={hasMore}
+            loading={loadingMore}
+            onClick={loadMore}
+          />
+
+          {previewEx && (
+            <NotePreview
+              open={preview}
+              exercise={previewEx}
+              onClose={() => setPreview(false)}
+            />
+          )}
+        </Paper>
+      </Fade>
     </Modal>
   );
 };
