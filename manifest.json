@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "name": "Rudi Mental",
+  "short_name": "Rudi Mental",
+  "description": "Метроном и тренажёр для барабанщиков.",
   "icons": [
     {
       "src": "favicon.ico",
