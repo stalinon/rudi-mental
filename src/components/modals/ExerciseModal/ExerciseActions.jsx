@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 
-const ExerciseActions = ({ showButton, onClearExercise, onClose, onAdd }) => {
+const ExerciseActions = ({ showButton, onClearExercise, onClose, onAdd, openLibrary }) => {
   return showButton ? (
     <Button fullWidth color="error" variant="outlined" onClick={() => {
       onClearExercise();
@@ -10,9 +10,18 @@ const ExerciseActions = ({ showButton, onClearExercise, onClose, onAdd }) => {
       Сбросить упражнение
     </Button>
   ) : (
-    <Button fullWidth variant="contained" onClick={onAdd}>
-      Добавить упражнение
-    </Button>
+    <Box sx={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: '5px'
+    }}>
+      <Button fullWidth variant="contained" onClick={onAdd}>
+        Добавить упражнение
+      </Button>
+      <Button fullWidth variant="contained" onClick={openLibrary}>
+        Выбрать из библиотеки
+      </Button>
+    </Box>
   );
 };
 
