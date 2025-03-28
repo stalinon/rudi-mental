@@ -87,7 +87,7 @@ function App() {
         exercise={exercise}
         currentBar={currentBar}
         currentBeat={currentBeat}
-        setIsActive={setIsActive}
+        beatsPerBar={signature.top}
         visible={visible}
       />
 
