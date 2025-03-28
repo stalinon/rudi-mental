@@ -5,40 +5,73 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="Rudi Mental"
-      content="Metronome app"
-    />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Rudi Mental</title>
+    <!-- Основное описание -->
+    <meta
+      name="description"
+      content="Rudi Mental — мощный онлайн-метроном и тренажёр ритма с визуализацией, гибкими настройками и уникальными функциями для музыкантов."
+    />
+    <meta
+      name="keywords"
+      content="метроном, онлайн метроном, тренировка ритма, музыкальный тренажёр, ритм, барабаны, электронный метроном, метроном для музыкантов, ударные, музыкальное приложение, настройка темпа, метроном с визуализацией, звуковой метроном, цифровой метроном, тактовый метроном, метроном для практики, темп, ритмика, упражнения для музыкантов, студийная практика, настройка ритма, обучение музыке, метроном с акцентами, смена размера тактов, улучшение тайминга"
+    />
+    <meta name="author" content="Egor Fedorov" />
+
+    <!-- Open Graph для соцсетей -->
+    <meta
+      property="og:title"
+      content="Rudi Mental – онлайн-метроном и тренажёр ритма"
+    />
+    <meta
+      property="og:description"
+      content="Гибкий метроном с настраиваемыми упражнениями, визуализацией ударов и циклами 'звук / тишина' – всё, что нужно для ритмичной практики!"
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/preview.png" />
+    <meta property="og:url" content="%PUBLIC_URL%" />
+    <meta property="og:type" content="website" />
+
+    <!-- Мета-теги Яндекса -->
+    <meta name="yandex-verification" content="671a6a339ce44235" />
+    <meta name="yandex" content="index, follow" />
+    <meta name="yandex:robots" content="all" />
+
+    <!-- Мета-теги Гугла -->
+    <meta
+      name="google-site-verification"
+      content="m9wzmK3l80uu_3Jx8jOVVb6ta8CbtIfbMF3a37k5Wfc"
+    />
+
+    <!-- Индексация -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Canonical (чтобы избежать дублирования страниц) -->
+    <link rel="canonical" href="%PUBLIC_URL%" />
+
+    <!-- Манифест -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <title>Rudi Mental – Онлайн-метроном и ритмический тренажёр</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
     <script src="%PUBLIC_URL%/vendor/groove_utils.js"></script>
     <script src="%PUBLIC_URL%/vendor/abc2svg-1.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Rudi Mental",
+        "url": "%PUBLIC_URL%",
+        "description": "Онлайн-метроном и тренажёр ритма с визуализацией, гибкими настройками и уникальными функциями для музыкантов.",
+        "image": "%PUBLIC_URL%/preview.png",
+        "author": {
+          "@type": "Person",
+          "name": "Egor Fedorov"
+        },
+        "applicationCategory": "MusicApplication",
+        "operatingSystem": "All"
+      }
+    </script>
   </body>
 </html>
