@@ -19,7 +19,10 @@ const AppLayout = (props) => {
     metronomeSettings,
     setCurrentBar,
     setCurrentBeat,
-    setIsActive
+    setIsActive,
+    settingsOpen,
+    exerciseModalOpen,
+    openLibrary
   } = props;
 
   console.log(metronomeSettings)
@@ -40,7 +43,7 @@ const AppLayout = (props) => {
         />
       </div>
 
-      <MetronomeButton bpm={bpm} isActive={isActive} onToggle={() => setIsActive(!isActive)} />
+      <MetronomeButton bpm={bpm} isActive={isActive} onToggle={() => setIsActive(!isActive)} modalsClosed={!(settingsOpen || openLibrary || exerciseModalOpen)} />
 
       <NoteViewer
         exercise={exercise}

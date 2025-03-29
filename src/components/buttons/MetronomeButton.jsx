@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 
-const MetronomeButton = ({ bpm, isActive, onToggle }) => {
+const MetronomeButton = ({ bpm, isActive, onToggle, modalsClosed }) => {
   const theme = useTheme();
 
   // Цвета из темы
@@ -16,14 +16,14 @@ const MetronomeButton = ({ bpm, isActive, onToggle }) => {
 
   useEffect(() => {
     const handleKeyPress = (e) => {
-      if (e.code === 'Space') {
+      if (e.code === 'Space' && modalsClosed) {
         e.preventDefault();
         onToggle();
       }
     };
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [onToggle]);
+  }, [onToggle, modalsClosed]);
 
   return (
     <Box
