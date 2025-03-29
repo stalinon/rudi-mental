@@ -2,13 +2,26 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Box, useTheme } from '@mui/material';
 import * as Tone from 'tone';
 
+const MAX_BPM = 240;
+
 const BeatVisualizer = ({
   bpm = 80,
   beatsPerBar = 4,
   isActive = false,
-  metronomeSettings = { playBars: 0, muteBars: 0 },
+  metronomeSettings = 
+  { 
+    playBars: 0,
+    muteBars: 0, 
+    accentSound: 'accent', 
+    regularSound: 'click', 
+    volumeAccent: 100, 
+    volumeRegular: 100, 
+    tempoProgression: 0,
+    enableProgression: false
+  },
   onBarChange = () => {},
   onBeatChange = () => {},
+  setBpm = (bpm) => {},
 }) => {
   const theme = useTheme();
   const [currentBeat, setCurrentBeat] = useState(-1);
@@ -20,15 +33,25 @@ const BeatVisualizer = ({
 
   const isCyclic = metronomeSettings.playBars > 0 && metronomeSettings.muteBars > 0;
 
+  const { tempoProgression, enableProgression } = metronomeSettings;
+  const accentSound = metronomeSettings.accentSound;
+  const regularSound = metronomeSettings.regularSound;
+  const volumeAccent = metronomeSettings.volumeAccent;
+  const volumeRegular = metronomeSettings.volumeRegular;
+
   useEffect(() => {
-    synth.current = new Tone.Player(`${process.env.PUBLIC_URL}/sounds/click.mp3`).toDestination();
-    accent.current = new Tone.Player(`${process.env.PUBLIC_URL}/sounds/accent.mp3`).toDestination();
+    synth.current = new Tone.Player(`${process.env.PUBLIC_URL}/sounds/${regularSound}.mp3`).toDestination();
+    accent.current = new Tone.Player(`${process.env.PUBLIC_URL}/sounds/${accentSound}.mp3`).toDestination();
+  
+    // Set volume
+    synth.current.volume.value = volumeRegular - 100;
+    accent.current.volume.value = volumeAccent - 100;
   
     return () => {
       synth.current.dispose();
       accent.current.dispose();
     };
-  }, []);
+  }, [accentSound, regularSound, volumeAccent, volumeRegular]);
   
 
   const playClick = (index) => {
@@ -60,8 +83,12 @@ const BeatVisualizer = ({
     intervalRef.current = setInterval(() => {
       beat = (beat + 1) % beatsPerBar;
 
+       if (bpm > MAX_BPM) {
+        setBpm(MAX_BPM);
+       }
+
        // Каждый раз, когда начинается новый такт
-       if (beat === 0) {
+       if (beat === 0) {          
           if (isCyclic) {
             const total = isMuted ? metronomeSettings.muteBars : metronomeSettings.playBars;
             if (barCounter >= total) {
@@ -72,6 +99,15 @@ const BeatVisualizer = ({
           
           barCounter++;
           onBarChange(barCounter - 1);
+          if (enableProgression && barCounter > 10) {
+            // Увеличиваем BPM по прогрессии
+            const progressTempo = bpm + tempoProgression;
+            if (bpm !== progressTempo) {
+              // Сохраняем новый темп
+              setBpm(progressTempo)
+              return () => clearInterval(intervalRef.current);
+            }
+          }
         }
 
         onBeatChange(beat);
@@ -83,7 +119,7 @@ const BeatVisualizer = ({
     }, intervalMs);
 
     return () => clearInterval(intervalRef.current);
-  }, [isActive, bpm, beatsPerBar, isCyclic, metronomeSettings, onBarChange, onBeatChange]);
+  }, [isActive, bpm, beatsPerBar, isCyclic, metronomeSettings, onBarChange, onBeatChange, enableProgression, setBpm, tempoProgression]);
 
   const getDotStyle = (i) => {
     const isCurrent = i === currentBeat;
