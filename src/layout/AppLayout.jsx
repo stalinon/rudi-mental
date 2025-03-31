@@ -1,5 +1,5 @@
 import React from 'react';
-import BeatVisualizer from "../components/BeatVisualizer";
+import BeatVisualizer from "../components/beat-visualizer/BeatVisualizer";
 import NoteViewer from '../components/NoteViewer';
 import MetronomeButton from '../components/buttons/MetronomeButton';
 import TempoSlider from '../components/TempoSlider';
