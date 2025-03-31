@@ -5,7 +5,7 @@ const CircleIconButton = ({ onClick, icon, labelTop, labelBottom, caption }) => 
   const theme = useTheme();
 
   return (
-    <Box sx={{ textAlign: 'center', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }} onClick={onClick }>
+    <Box sx={{ textAlign: 'center', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90px' }} onClick={onClick }>
       {caption && (
         <Typography
           variant="caption"
