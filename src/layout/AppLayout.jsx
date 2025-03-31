@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import BeatVisualizer from "../components/beat-visualizer/BeatVisualizer";
 import NoteViewer from '../components/NoteViewer';
 import MetronomeButton from '../components/buttons/MetronomeButton';
@@ -25,7 +25,15 @@ const AppLayout = (props) => {
     openLibrary
   } = props;
 
-  console.log(metronomeSettings)
+  const [isPulsing, setIsPulsing] = useState(false);
+  const pulseTimeout = useRef(null);
+
+  useEffect(() => {
+    if (!isActive) return;
+    setIsPulsing(true);
+    clearTimeout(pulseTimeout.current);
+    pulseTimeout.current = setTimeout(() => setIsPulsing(false), 60000 / bpm / metronomeSettings.signature.top);
+  }, [currentBeat]);
 
   return (
     <div className="App">
@@ -43,7 +51,13 @@ const AppLayout = (props) => {
         />
       </div>
 
-      <MetronomeButton bpm={bpm} isActive={isActive} onToggle={() => setIsActive(!isActive)} modalsClosed={!(settingsOpen || openLibrary || exerciseModalOpen)} />
+      <MetronomeButton
+        bpm={bpm}
+        isActive={isActive}
+        onToggle={() => setIsActive(!isActive)}
+        modalsClosed={!(settingsOpen || openLibrary || exerciseModalOpen)}
+        isPulsing={isPulsing}
+      />
 
       <NoteViewer
         exercise={exercise}

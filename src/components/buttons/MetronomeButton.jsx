@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 
-const MetronomeButton = ({ bpm, isActive, onToggle, modalsClosed }) => {
+const MetronomeButton = ({ bpm, isActive, onToggle, modalsClosed, isPulsing }) => {
   const theme = useTheme();
 
-  // Цвета из темы
   const activeStart = theme.palette.primary.light;
   const activeEnd = theme.palette.secondary.light;
   const inactiveStart = theme.palette.grey[500];
@@ -31,6 +30,7 @@ const MetronomeButton = ({ bpm, isActive, onToggle, modalsClosed }) => {
       sx={{
         width: 200,
         height: 200,
+        position: 'relative',
         borderRadius: '50%',
         backgroundColor: theme.palette.background.default,
         border: '4px solid transparent',
@@ -47,6 +47,40 @@ const MetronomeButton = ({ bpm, isActive, onToggle, modalsClosed }) => {
           ? `0 0 20px 5px ${theme.palette.primary.main}80`
           : `0 0 10px ${theme.palette.mode === 'light' ? theme.palette.grey[900] : theme.palette.primary.light}30`,
         userSelect: 'none',
+
+        '&::after': isPulsing
+          ? {
+              content: '""',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: '100%',
+              height: '100%',
+              transform: 'translate(-50%, -50%)',
+              borderRadius: '50%',
+              backgroundColor: theme.palette.primary.main,
+              opacity: 0.05,
+              animation: 'gentlePulse 1000ms ease-out',
+              pointerEvents: 'none',
+              zIndex: -1,
+              filter: 'blur(20px)',
+            }
+          : {},
+
+        '@keyframes gentlePulse': {
+          '0%': {
+            opacity: 0.15,
+            transform: 'translate(-50%, -50%) scale(1)',
+          },
+          '50%': {
+            opacity: 0.05,
+            transform: 'translate(-50%, -50%) scale(1.05)',
+          },
+          '100%': {
+            opacity: 0,
+            transform: 'translate(-50%, -50%) scale(1.05)',
+          },
+        },
       }}
     >
       <Typography
@@ -56,12 +90,13 @@ const MetronomeButton = ({ bpm, isActive, onToggle, modalsClosed }) => {
           background: gradient,
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
+          zIndex: 1,
         }}
       >
         {bpm}
       </Typography>
 
-      <Typography variant="subtitle2" color={theme.palette.text.secondary}>
+      <Typography variant="subtitle2" color={theme.palette.text.secondary} sx={{ zIndex: 1 }}>
         ударов в мин.
       </Typography>
 
@@ -75,6 +110,7 @@ const MetronomeButton = ({ bpm, isActive, onToggle, modalsClosed }) => {
           borderRadius: 1,
           backgroundColor: theme.palette.action.hover,
           fontSize: '0.65rem',
+          zIndex: 1,
         }}
       >
         пробел
