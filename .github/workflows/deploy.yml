@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: 🚀 Deploy React App to GitHub Pages
 
 on:
   push:
@@ -7,31 +7,49 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+env:
+  NODE_ENV: production
 
 jobs:
   deploy:
+    name: 🔧 Build & Deploy
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
-      - name: 📥 Checkout repo
-        uses: actions/checkout@v3
+      - name: 📥 Checkout source code
+        uses: actions/checkout@v4
 
-      - name: 🟢 Use Node.js
-        uses: actions/setup-node@v3
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
 
       - name: 📦 Install dependencies
         run: npm ci
-      
-      - name: 🔐 Inject environment variables
-        run: echo "REACT_APP_API_TOKEN=${{ secrets.REACT_APP_API_TOKEN }}" > .env
 
-      - name: 🛠 Build
+      - name: 🔐 Setup environment variables
+        run: |
+          echo "REACT_APP_API_TOKEN=${{ secrets.REACT_APP_API_TOKEN }}" >> .env
+
+      - name: 🛠 Build the app
         run: npm run build
+
+      - name: 📂 List build output (debug helper)
+        run: ls -alh ./build
 
       - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+          publish_branch: gh-pages
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      - name: ✅ Deployment complete
+        run: echo "🎉 Successfully deployed!"
