@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/rudi-mental/static/css/main.81e984e9.css",
-    "main.js": "/rudi-mental/static/js/main.b6483484.js",
+    "main.js": "/rudi-mental/static/js/main.cf224394.js",
     "static/js/453.ee64d55e.chunk.js": "/rudi-mental/static/js/453.ee64d55e.chunk.js",
     "index.html": "/rudi-mental/index.html",
     "main.81e984e9.css.map": "/rudi-mental/static/css/main.81e984e9.css.map",
-    "main.b6483484.js.map": "/rudi-mental/static/js/main.b6483484.js.map",
+    "main.cf224394.js.map": "/rudi-mental/static/js/main.cf224394.js.map",
     "453.ee64d55e.chunk.js.map": "/rudi-mental/static/js/453.ee64d55e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.81e984e9.css",
-    "static/js/main.b6483484.js"
+    "static/js/main.cf224394.js"
   ]
 }
