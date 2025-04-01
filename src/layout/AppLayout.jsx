@@ -33,7 +33,7 @@ const AppLayout = (props) => {
     setIsPulsing(true);
     clearTimeout(pulseTimeout.current);
     pulseTimeout.current = setTimeout(() => setIsPulsing(false), 60000 / bpm / metronomeSettings.signature.top);
-  }, [currentBeat]);
+  }, [currentBeat, bpm, metronomeSettings.signature.top, isActive]);
 
   return (
     <div className="App">
